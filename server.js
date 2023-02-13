@@ -16,7 +16,6 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(cookieParser());
 
-console.log("2");
 app.use("/api/users", userRouter);
 mongoose.set("strictQuery", false);
 mongoose.connect(dbUri, {
