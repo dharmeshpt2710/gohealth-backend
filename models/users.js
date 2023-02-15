@@ -11,6 +11,18 @@ const userScheme = new schema({
         type: String,
         required: true
     },
+    location: {
+        type: String,
+        required: false
+    },
+    number: {
+        type: String,
+        required: false
+    },
+    userType: {
+        type: String,
+        required: false
+    }
 })
 const User = mongoose.model("User", userScheme)
 module.exports = User
