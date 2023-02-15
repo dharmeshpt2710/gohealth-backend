@@ -45,40 +45,40 @@ router.get("/:id", async (req, res) => {
   res.status(200).json(user);
 });
 
-// router.post("/login", verifyUserInputs, async (req, res) => {
-//   try {
-//     let user = await User.findOne({ email: req.body.email });
-//     console.log("Use=r=========>");
-//     console.log(user);
-//     if (!user) {
-//       res.status(404).json({ message: "not found" });
-//       return;
-//     }
+router.post("/login", verifyUserInputs, async (req, res) => {
+  try {
+    let user = await User.findOne({ email: req.body.email });
+    console.log("Use=r=========>");
+    console.log(user);
+    if (!user) {
+      res.status(404).json({ message: "not found" });
+      return;
+    }
 
-//     let passwordMatched = await bcrypt.compare(
-//       req.body.password,
-//       user.password
-//     );
-//     console.log("Password==========");
-//     console.log(passwordMatched);
+    let passwordMatched = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    console.log("Password==========");
+    console.log(passwordMatched);
 
-//     if (!passwordMatched) {
-//       return res.status(404).json({ error: "User Not found" });
-//     }
-//     let userObj = {
-//       name: user.name,
-//       password: user.password,
-//     };
-//     const token = jwt.sign(userObj, secret, { expiresIn: "2h" });
-//     res.cookie("token", token, {
-//       httpOnly: true,
-//       maxAge: 100000,
-//     });
-//     res.status(201).json({ message: "Logged In Successfully" });
-//   } catch (error) {
-//     res.status(400).json({ error: error });
-//   }
-// });
+    if (!passwordMatched) {
+      return res.status(404).json({ error: "User Not found" });
+    }
+    let userObj = {
+      name: user.name,
+      password: user.password,
+    };
+    const token = jwt.sign(userObj, secret, { expiresIn: "2h" });
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 100000,
+    });
+    res.status(201).json({ message: "Logged In Successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
+});
 
 let validateEmail = (email) => {
   let str = email.substr(email.length - 3);
