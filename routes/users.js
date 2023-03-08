@@ -74,7 +74,7 @@ router.post("/login", verifyUserInputs, async (req, res) => {
       httpOnly: true,
       maxAge: 100000,
     });
-    res.status(201).json({ message: "Logged In Successfully" });
+    res.status(201).json(user);
   } catch (error) {
     res.status(400).json({ error: error });
   }
