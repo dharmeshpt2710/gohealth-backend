@@ -30,6 +30,23 @@ const doctorSchema = new schema({
         type: String,
         required: true,
     },
+    appointments: [{
+        patientId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'User'
+        },
+        appointmentId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'Appointment'
+        },
+        appointmentTime: {
+            type: String,
+            required: true
+        },
+
+    }]
 
 })
 const Doctor = mongoose.model("Doctor", doctorSchema)
