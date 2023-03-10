@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const { port, dbUri } = require("./config");
 const userRouter = require("./routes/users");
 const doctorRouter = require("./routes/doctors");
+const appointmentsRouter = require("./routes/appointments")
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -17,8 +18,10 @@ app.use(function (req, res, next) {
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/users", userRouter);
+app.use("/api/users", userRouter)
 app.use("/api/doctors", doctorRouter)
+app.use("/api/appointments", appointmentsRouter)
+
 mongoose.set("strictQuery", false);
 mongoose.connect(dbUri, {
 }).then((res) => {
