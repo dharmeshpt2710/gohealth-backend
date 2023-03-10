@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const { port, dbUri } = require("./config");
 const userRouter = require("./routes/users");
+const doctorRouter = require("./routes/doctors");
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/users", userRouter);
+app.use("/api/doctors", doctorRouter)
 mongoose.set("strictQuery", false);
 mongoose.connect(dbUri, {
 }).then((res) => {
