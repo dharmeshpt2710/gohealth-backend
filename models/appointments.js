@@ -5,10 +5,12 @@ const appointmentSchema = new schema({
     patientId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
+        ref: 'User'
     },
     doctorId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
+        ref: 'Doctor'
     },
     appointmentTime: {
         type: String,
@@ -16,7 +18,11 @@ const appointmentSchema = new schema({
     },
     appointmentNote: {
         type: String,
-        require: false
+        required: false
+    },
+    appointmentStatus: {
+        type: Boolean,
+        required: false
     }
 })
 const Appointments = mongoose.model("Appointments", appointmentSchema)
