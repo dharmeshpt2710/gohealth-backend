@@ -30,6 +30,14 @@ const doctorSchema = new schema({
         type: String,
         required: true,
     },
+    // profileImage: {
+    //     type: String,
+    //     require: false
+    // },
+    registrationStatus: {
+        type: Boolean,
+        require: false
+    },
     appointments: [{
         patientId: {
             type: mongoose.Schema.Types.ObjectId,
