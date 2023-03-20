@@ -118,6 +118,7 @@ router.post(
         name: req.body.name,
         email: req.body.email,
         password,
+        userType: req.body.userType == "admin" ? "admin" : "patient"
       });
 
       user

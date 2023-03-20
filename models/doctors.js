@@ -30,6 +30,10 @@ const doctorSchema = new schema({
         type: String,
         required: true,
     },
+    profileImage: {
+        type: String,
+        require: false
+    }
 
 })
 const Doctor = mongoose.model("Doctor", doctorSchema)

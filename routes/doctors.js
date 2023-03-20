@@ -2,12 +2,37 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
 
 const { secret } = require("../config");
 const User = require("../models/users");
 const Doctor = require("../models/doctors");
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        if (file.fieldname === "image") {
+            cb(null, "uploads/images");
+        } else if (file.fieldname === "file") {
+            cb(null, "uploads/files");
+        }
+    },
+    filename: (req, file, cb) => {
+        if (file.fieldname === "image") {
+            cb(null, Date.now() + "-" + file.originalname);
+        } else if (file.fieldname === "file") {
+            cb(null, Date.now() + "-" + file.originalname);
+        }
+    },
+})
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5,
+    },
+});
 
 const verifyUserInputs = (req, res, next) => {
     if (!req.body.email || !req.body.password) {
@@ -49,8 +74,6 @@ router.get("/:id", async (req, res) => {
 router.post("/login", verifyUserInputs, async (req, res) => {
     try {
         let doctor = await Doctor.findOne({ email: req.body.email });
-        console.log("docctor=========>");
-        console.log(doctor);
         if (!doctor) {
             res.status(404).json({ message: "not found" });
             return;
@@ -60,8 +83,6 @@ router.post("/login", verifyUserInputs, async (req, res) => {
             req.body.password,
             doctor.password
         );
-        console.log("Password==========");
-        console.log(passwordMatched);
 
         if (!passwordMatched) {
             return res.status(404).json({ error: "User Not found" });
@@ -102,6 +123,7 @@ router.post(
             .isLength({ min: 5 })
             .withMessage("Atleast 5 characters"),
     ],
+    upload.fields([{ name: "image" }]),
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -115,6 +137,7 @@ router.post(
             // }
             const salt = await bcrypt.genSalt(10);
             const password = await bcrypt.hash(req.body.password, salt);
+            const image = req.files["image"][0].filename;
             doctor = new Doctor({
                 name: req.body.name,
                 email: req.body.email,
@@ -122,7 +145,8 @@ router.post(
                 qualification: req.body.qualification,
                 password,
                 yearsOfExperience: req.body.yearsOfExperience,
-                specialty: req.body.specialty
+                specialty: req.body.specialty,
+                profileImage: image
             });
             doctor
                 .save()
