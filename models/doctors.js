@@ -30,11 +30,14 @@ const doctorSchema = new schema({
         type: String,
         required: true,
     },
-    profileImage: {
-        type: String,
+    // profileImage: {
+    //     type: String,
+    //     require: false
+    // },
+    registrationStatus: {
+        type: Boolean,
         require: false
     }
-
 })
 const Doctor = mongoose.model("Doctor", doctorSchema)
 module.exports = Doctor;

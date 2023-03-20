@@ -137,7 +137,7 @@ router.post(
             // }
             const salt = await bcrypt.genSalt(10);
             const password = await bcrypt.hash(req.body.password, salt);
-            const image = req.files["image"][0].filename;
+            // const image = req.files["image"][0].filename;
             doctor = new Doctor({
                 name: req.body.name,
                 email: req.body.email,
@@ -146,7 +146,8 @@ router.post(
                 password,
                 yearsOfExperience: req.body.yearsOfExperience,
                 specialty: req.body.specialty,
-                profileImage: image
+                // profileImage: image,
+                registrationStatus: false
             });
             doctor
                 .save()
@@ -157,10 +158,22 @@ router.post(
                     return res.status(400).json({ error: err });
                 });
         } catch (error) {
-            res.status(400).json({ message: error });
+            res.status(400).json({ message: error.message });
         }
     }
 );
+router.put("/updateStatus", (req, res) => {
+    Doctor.findByIdAndUpdate({ _id: req.body.doctorId }, { $set: { registrationStatus: req.body.registrationStatus } }, { new: true },
+        (err, updatedStatus) => {
+            if (err) {
+                return res.status(500).send({ message: 'Error updating doctor' });
+            }
+            if (!updatedStatus) {
+                return res.status(404).send({ message: 'Doctor not found' });
+            }
+            res.send({ message: 'Registration status completed' });
+        })
+})
 router.get("/edit", userIsAuthorized, (req, res) => {
     res.status(200).json(req.doctor);
 });
