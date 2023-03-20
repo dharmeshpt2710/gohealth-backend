@@ -6,6 +6,7 @@ const cors = require("cors");
 const { port, dbUri } = require("./config");
 const userRouter = require("./routes/users");
 const doctorRouter = require("./routes/doctors");
+const appointmentsRouter = require("./routes/appointments")
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -19,9 +20,13 @@ app.use(cors())
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/users", userRouter);
+app.use("/api/users", userRouter)
 app.use("/api/doctors", doctorRouter)
+<<<<<<< HEAD
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
+=======
+app.use("/api/appointments", appointmentsRouter)
+>>>>>>> e217819bc1611a6efb57a18fd6a0bb512f999a98
 
 mongoose.set("strictQuery", false);
 mongoose.connect(dbUri, {
