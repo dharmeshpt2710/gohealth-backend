@@ -6,7 +6,7 @@ const cors = require("cors");
 const { port, dbUri } = require("./config");
 const userRouter = require("./routes/users");
 const doctorRouter = require("./routes/doctors");
-const appointmentsRouter = require("./routes/appointments")
+const appointmentsRouter = require("./routes/appointments");
 
 const app = express();
 app.set("views", path.join(__dirname, "views"));
@@ -16,24 +16,23 @@ app.set("view engine", "ejs");
 //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 //     next();
 // });
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/users", userRouter)
-app.use("/api/doctors", doctorRouter)
-<<<<<<< HEAD
+app.use("/api/users", userRouter);
+app.use("/api/doctors", doctorRouter);
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
-=======
-app.use("/api/appointments", appointmentsRouter)
->>>>>>> e217819bc1611a6efb57a18fd6a0bb512f999a98
+app.use("/api/appointments", appointmentsRouter);
 
 mongoose.set("strictQuery", false);
-mongoose.connect(dbUri, {
-}).then((res) => {
+mongoose
+  .connect(dbUri, {})
+  .then((res) => {
     app.listen(port, () => {
-        console.log("Server is running on", port);
+      console.log("Server is running on", port);
     });
-}).catch((err) => {
+  })
+  .catch((err) => {
     console.log(err);
-});
+  });
