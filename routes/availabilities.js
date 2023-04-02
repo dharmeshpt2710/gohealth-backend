@@ -16,6 +16,21 @@ router.get("/availableSlots", async (req, res) => {
     }
 })
 
+//get availabilties by doctorID
+router.get("/getAvailabilities", async (req, res) => {
+    try {
+        const availabilities = await Availabilities.findById(req.body.doctorId)
+        if (availabilities.length == 0) {
+            res.status(200).json({ message: "Availabilities not found" });
+        } else {
+            res.status(200).json(availabilities);
+
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+})
+
 router.post("/set-availabilities", async (req, res) => {
     try {
         const { doctorId, appointmentDate, timeSlots } = req.body
