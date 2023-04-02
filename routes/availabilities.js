@@ -17,15 +17,12 @@ router.get("/availableSlots", async (req, res) => {
 })
 
 //get availabilties by doctorID
-router.get("/getAvailabilities", async (req, res) => {
+router.get("/getDoctorAvailability/:doctorId", async (req, res) => {
     try {
-        const availabilities = await Availabilities.findById(req.body.doctorId)
-        if (availabilities.length == 0) {
-            res.status(200).json({ message: "Availabilities not found" });
-        } else {
-            res.status(200).json(availabilities);
+        const doctorId = req.params.doctorId;
+        const availabilities = await Availabilities.find({ doctorId: doctorId });
+        res.status(200).json({ availabilities: availabilities });
 
-        }
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
