@@ -27,11 +27,11 @@ router.get("/:id", async (req, res) => {
 })
 
 //api to get the timeSlots
-router.get('/bookedTimeSlots', async (req, res) => {
-    const { doctorId, appointmentStartTime } = req.body;
+router.post('/bookedTimeSlots', async (req, res) => {
+    const { doctorId, appointmentDate } = req.body;
     try {
-        const existingAppointment = await Appointments.findOne({ doctorId: doctorId, appointmentStartTime: appointmentStartTime });
-        res.status(200).json({ appointment: existingAppointment })
+        const existingAppointments = await Appointments.find({ doctorId: doctorId, appointmentDate: appointmentDate });
+        res.status(200).json({ appointments: existingAppointments })
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
