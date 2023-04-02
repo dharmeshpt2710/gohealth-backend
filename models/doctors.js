@@ -41,10 +41,10 @@ const doctorSchema = new schema({
             required: true,
             ref: 'Appointment'
         },
-        appointmentTime: {
-            type: String,
-            required: true
-        },
+        // appointmentTime: {
+        //     type: String,
+        //     required: true
+        // },
 
     }]
 

@@ -24,20 +24,20 @@ const userSchema = new schema({
         required: false
     },
     appointments: [{
-        doctorId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: 'Doctor'
-        },
+        // doctorId: {
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     required: true,
+        //     ref: 'Doctor'
+        // },
         appointmentId: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
             ref: 'Appointment'
         },
-        appointmentTime: {
-            type: String,
-            required: true
-        },
+        // appointmentTime: {
+        //     type: String,
+        //     required: true
+        // },
 
     }]
 })

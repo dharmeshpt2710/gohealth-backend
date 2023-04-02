@@ -26,17 +26,59 @@ router.get("/:id", async (req, res) => {
     }
 })
 
+//api to get the timeSlots
+router.get('/bookedTimeSlots', async (req, res) => {
+    const { doctorId, appointmentStartTime } = req.body;
+    try {
+        const existingAppointment = await Appointments.findOne({ doctorId: doctorId, appointmentStartTime: appointmentStartTime });
+        res.status(200).json({ appointment: existingAppointment })
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+})
+// router.get('/availableTimeSlots', async (req, res) => {
+//     try {
+//         const doctorId = req.query.doctorId;
+//         const date = new Date(req.query.date);
+//         const appointments = await Appointment.find({
+//             doctor: doctorId,
+//             date: date
+//         });
+//         const startTime = new Date(date);
+//         startTime.setHours(9, 0, 0, 0); // clinic opening time
+//         const endTime = new Date(date);
+//         endTime.setHours(17, 0, 0, 0); // clinic closing time
+//         const timeSlots = [];
+//         while (startTime < endTime) {
+//             timeSlots.push(new Date(startTime));
+//             startTime.setMinutes(startTime.getMinutes() + 30);
+//         }
+//     } catch (error) {
+
+//     }
+// })
+
 //API to book an appointment
 router.post("/", async (req, res) => {
     try {
-        const { patientId, doctorId, appointmentTime, appointmentNote } = req.body;
-        const existingAppointment = await Appointments.findOne({ doctorId, appointmentTime });
+        const { patientId, doctorId, appointmentName, appointmentEmail, appointmentStartTime, appointmentEndTime, appointmentDate, appointmentNote } = req.body;
+        const existingAppointment = await Appointments.findOne({ doctorId, appointmentStartTime });
 
         if (existingAppointment) {
             return res.status(400).json({ message: "This time slot is already booked. Please choose another slot." });
         }
 
-        const newAppointment = new Appointments({ patientId, doctorId, appointmentTime, appointmentNote, appointmentStatus: true });
+        const newAppointment = new Appointments({
+            patientId: patientId,
+            doctorId: doctorId,
+            appointmentName,
+            appointmentEmail,
+            appointmentStartTime,
+            appointmentEndTime,
+            appointmentDate,
+            appointmentNote,
+            appointmentStatus: true
+        });
         const appointment = await newAppointment.save();
 
         res.status(201).json({ message: "Appointment Created", appointment: appointment });
@@ -51,13 +93,13 @@ async function updateUserAndDoctor(appointment) {
     try {
         const updatedPatient = await User.findByIdAndUpdate(
             appointment.patientId,
-            { $push: { appointments: { doctorId: appointment.doctorId, appointmentId: appointment._id, appointmentTime: appointment.appointmentTime } } },
+            { $push: { appointments: { appointmentId: appointment._id } } },
             { new: true }
         ).exec();
 
         const updatedDoctor = await Doctor.findByIdAndUpdate(
             appointment.doctorId,
-            { $push: { appointments: { patientId: appointment.patientId, appointmentId: appointment._id, appointmentTime: appointment.appointmentTime } } },
+            { $push: { appointments: { appointmentId: appointment._id } } },
             { new: true }
         ).exec();
 
