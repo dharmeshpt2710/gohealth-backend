@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 router.get("/doctors/:doctorId", async (req, res) => {
 
     try {
-        const appointment = await Appointments.find({ doctorId: req.params.doctorId })
+        const appointment = await Appointments.find({ doctorId: req.params.doctorId }).populate('doctorId').populate('patientId')
         res.status(200).json({ appointments: appointment })
     } catch (error) {
         res.status(400).json({ message: "No Appointments available" })
@@ -28,10 +28,10 @@ router.get("/doctors/:doctorId", async (req, res) => {
 router.get("/patients/:patientId", async (req, res) => {
 
     try {
-        const appointment = await Appointments.find({ patientId: req.params.patientId })
-        res.status(200).json({ appointments: appointment })
+        const appointments = await Appointments.find({ patientId: req.params.patientId }).populate('doctorId').populate('patientId')
+        res.status(200).json({ appointments: appointments });
     } catch (error) {
-        res.status(400).json({ message: "No Appointments available" })
+        res.status(400).json({ message: error.message })
     }
 })
 //api to get the timeSlots

@@ -26,6 +26,7 @@ app.use("/api/appointments", appointmentsRouter)
 app.use("/api/availabilities", availabilitiesRouter)
 
 mongoose.set("strictQuery", false);
+// mongoose.set("strictPopulate", false)
 mongoose
     .connect(dbUri, {})
     .then((res) => {

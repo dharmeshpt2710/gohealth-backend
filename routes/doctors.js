@@ -67,8 +67,8 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const user = await User.findById(req.params.id);
-    res.status(200).json(user);
+    const doctor = await Doctor.findById(req.params.id);
+    res.status(200).json(doctor);
 });
 
 router.post("/login", verifyUserInputs, async (req, res) => {
