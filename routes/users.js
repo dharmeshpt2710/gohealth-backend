@@ -48,8 +48,6 @@ router.get("/:id", async (req, res) => {
 router.post("/login", verifyUserInputs, async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
-    console.log("User=========>");
-    console.log(user);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
@@ -59,9 +57,6 @@ router.post("/login", verifyUserInputs, async (req, res) => {
       req.body.password,
       user.password
     );
-    console.log("Password==========");
-    console.log(passwordMatched);
-
     if (!passwordMatched) {
       return res.status(401).json({ message: "Incorrect password" });
     }
@@ -121,8 +116,7 @@ router.post(
         userType: req.body.userType == "admin" ? "admin" : "patient"
       });
 
-      user
-        .save()
+      user.save()
         .then((result) => {
           return res.status(201).json({ message: "Sign Up Successful", data: result });
         })
