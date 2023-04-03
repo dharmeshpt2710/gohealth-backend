@@ -124,7 +124,7 @@ router.post(
       user
         .save()
         .then((result) => {
-          return res.status(201).json(result);
+          return res.status(201).json({ message: "Sign Up Successful", data: result });
         })
         .catch((err) => {
           return res.status(400).json({ message: err.message });
