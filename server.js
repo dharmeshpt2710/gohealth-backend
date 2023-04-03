@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const { port, dbUri } = require("./config");
 const userRouter = require("./routes/users");
 const doctorRouter = require("./routes/doctors");
@@ -10,11 +11,12 @@ const availabilitiesRouter = require("./routes/availabilities")
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
@@ -24,11 +26,13 @@ app.use("/api/appointments", appointmentsRouter)
 app.use("/api/availabilities", availabilitiesRouter)
 
 mongoose.set("strictQuery", false);
-mongoose.connect(dbUri, {
-}).then((res) => {
-    app.listen(port, () => {
-        console.log("Server is running on", port);
+mongoose
+    .connect(dbUri, {})
+    .then((res) => {
+        app.listen(port, () => {
+            console.log("Server is running on", port);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
-}).catch((err) => {
-    console.log(err);
-});

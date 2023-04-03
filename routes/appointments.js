@@ -15,17 +15,25 @@ router.get("/", async (req, res) => {
 
 })
 
-//API to get the appointment by ID
-router.get("/:id", async (req, res) => {
+//API to get the appointment by I
+router.get("/doctors/:doctorId", async (req, res) => {
 
     try {
-        const appointment = await Appointments.findById(req.params.appointmentId)
-        res.status(200).json(appointment)
+        const appointment = await Appointments.find({ doctorId: req.params.doctorId })
+        res.status(200).json({ appointments: appointment })
     } catch (error) {
         res.status(400).json({ message: "No Appointments available" })
     }
 })
+router.get("/patients/:patientId", async (req, res) => {
 
+    try {
+        const appointment = await Appointments.find({ patientId: req.params.patientId })
+        res.status(200).json({ appointments: appointment })
+    } catch (error) {
+        res.status(400).json({ message: "No Appointments available" })
+    }
+})
 //api to get the timeSlots
 router.post('/bookedTimeSlots', async (req, res) => {
     const { doctorId, appointmentDate } = req.body;
