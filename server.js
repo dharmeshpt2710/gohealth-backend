@@ -6,8 +6,8 @@ const cors = require("cors");
 const { port, dbUri } = require("./config");
 const userRouter = require("./routes/users");
 const doctorRouter = require("./routes/doctors");
-const appointmentsRouter = require("./routes/appointments")
-const availabilitiesRouter = require("./routes/availabilities")
+const appointmentsRouter = require("./routes/appointments");
+const availabilitiesRouter = require("./routes/availabilities");
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -20,20 +20,20 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/users", userRouter)
-app.use("/api/doctors", doctorRouter)
-app.use("/api/appointments", appointmentsRouter)
-app.use("/api/availabilities", availabilitiesRouter)
+app.use("/api/users", userRouter);
+app.use("/api/doctors", doctorRouter);
+app.use("/api/appointments", appointmentsRouter);
+app.use("/api/availabilities", availabilitiesRouter);
 
 mongoose.set("strictQuery", false);
 // mongoose.set("strictPopulate", false)
 mongoose
-    .connect(dbUri, {})
-    .then((res) => {
-        app.listen(port, () => {
-            console.log("Server is running on", port);
-        });
-    })
-    .catch((err) => {
-        console.log(err);
+  .connect(dbUri, {})
+  .then((res) => {
+    app.listen(port, () => {
+      console.log("Server is running on", port);
     });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
