@@ -48,10 +48,10 @@ router.get("/:id", async (req, res) => {
 router.post("/login", verifyUserInputs, async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
-    console.log("Use=r=========>");
+    console.log("User=========>");
     console.log(user);
     if (!user) {
-      res.status(404).json({ message: "not found" });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
@@ -63,7 +63,7 @@ router.post("/login", verifyUserInputs, async (req, res) => {
     console.log(passwordMatched);
 
     if (!passwordMatched) {
-      return res.status(404).json({ error: "User Not found" });
+      return res.status(401).json({ message: "Incorrect password" });
     }
     let userObj = {
       name: user.name,
@@ -76,7 +76,7 @@ router.post("/login", verifyUserInputs, async (req, res) => {
     });
     res.status(201).json(user);
   } catch (error) {
-    res.status(400).json({ error: error });
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -127,10 +127,10 @@ router.post(
           return res.status(201).json(result);
         })
         .catch((err) => {
-          return res.status(400).json({ error: err });
+          return res.status(400).json({ message: err.message });
         });
     } catch (error) {
-      res.status(400).json({ message: error });
+      res.status(400).json({ message: error.message });
     }
   }
 );
