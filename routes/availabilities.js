@@ -20,8 +20,8 @@ router.get("/availableSlots", async (req, res) => {
 router.get("/getDoctorAvailability/:doctorId", async (req, res) => {
     try {
         const doctorId = req.params.doctorId;
-        const availabilities = await Availabilities.find({ doctorId: doctorId });
-        res.status(200).json({ availabilities: availabilities });
+        const availabilities = await Availabilities.findOne({ doctorId: doctorId });
+        res.status(200).json(availabilities);
 
     } catch (error) {
         res.status(400).json({ message: error.message })

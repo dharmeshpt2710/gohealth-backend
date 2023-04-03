@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
 
     try {
-        const appointment = await Appointments.findById(req.params._id)
+        const appointment = await Appointments.findById(req.params.appointmentId)
         res.status(200).json(appointment)
     } catch (error) {
         res.status(400).json({ message: "No Appointments available" })
