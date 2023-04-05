@@ -48,6 +48,30 @@ router.post("/set-availabilities", async (req, res) => {
   }
 });
 
+router.put("/update-availabilities/:id", async (req, res) => {
+  try {
+    const { doctorId, appointmentDate, timeSlots } = req.body;
+    const updatedAvailabilities = await Availabilities.findByIdAndUpdate(
+      req.params.id,
+      {
+        doctorId: doctorId,
+        appointmentDate: appointmentDate,
+        timeSlots: timeSlots,
+      },
+      { new: true }
+    );
+    if (!updatedAvailabilities) {
+      return res.status(404).json({ message: "Availabilities not found" });
+    }
+    res.status(200).json({
+      message: "Availabilities updated",
+      availabilities: updatedAvailabilities,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.delete("/delete-availabilities/:id", async (req, res) => {
   try {
     const { id } = req.params;
