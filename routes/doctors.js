@@ -67,15 +67,15 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-    const user = await User.findById(req.params.id);
-    res.status(200).json(user);
+    const doctor = await Doctor.findById(req.params.id);
+    res.status(200).json(doctor);
 });
 
 router.post("/login", verifyUserInputs, async (req, res) => {
     try {
         let doctor = await Doctor.findOne({ email: req.body.email });
         if (!doctor) {
-            res.status(404).json({ message: "not found" });
+            res.status(404).json({ message: "User not found" });
             return;
         }
 
@@ -85,7 +85,7 @@ router.post("/login", verifyUserInputs, async (req, res) => {
         );
 
         if (!passwordMatched) {
-            return res.status(404).json({ error: "User Not found" });
+            return res.status(401).json({ message: "Incorrect Email/Password" });
         }
         let doctorObj = {
             name: doctor.name,
@@ -98,7 +98,7 @@ router.post("/login", verifyUserInputs, async (req, res) => {
         });
         res.status(200).json(doctor);
     } catch (error) {
-        res.status(400).json({ error: error });
+        res.status(400).json({ message: error.message });
     }
 });
 
@@ -155,7 +155,7 @@ router.post(
                     return res.status(201).json(result);
                 })
                 .catch((err) => {
-                    return res.status(400).json({ error: err });
+                    return res.status(400).json({ message: err.message });
                 });
         } catch (error) {
             res.status(400).json({ message: error.message });

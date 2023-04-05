@@ -48,10 +48,8 @@ router.get("/:id", async (req, res) => {
 router.post("/login", verifyUserInputs, async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
-    console.log("Use=r=========>");
-    console.log(user);
     if (!user) {
-      res.status(404).json({ message: "not found" });
+      res.status(404).json({ message: "User not found" });
       return;
     }
 
@@ -59,11 +57,8 @@ router.post("/login", verifyUserInputs, async (req, res) => {
       req.body.password,
       user.password
     );
-    console.log("Password==========");
-    console.log(passwordMatched);
-
     if (!passwordMatched) {
-      return res.status(404).json({ error: "User Not found" });
+      return res.status(401).json({ message: "Incorrect password" });
     }
     let userObj = {
       name: user.name,
@@ -76,7 +71,7 @@ router.post("/login", verifyUserInputs, async (req, res) => {
     });
     res.status(201).json(user);
   } catch (error) {
-    res.status(400).json({ error: error });
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -118,25 +113,71 @@ router.post(
         name: req.body.name,
         email: req.body.email,
         password,
-        userType: req.body.userType == "admin" ? "admin" : "patient"
+        userType: req.body.userType == "admin" ? "admin" : "patient",
       });
 
       user
         .save()
         .then((result) => {
-          return res.status(201).json(result);
+          return res
+            .status(201)
+            .json({ message: "Sign Up Successful", data: result });
         })
         .catch((err) => {
-          return res.status(400).json({ error: err });
+          return res.status(400).json({ message: err.message });
         });
     } catch (error) {
-      res.status(400).json({ message: error });
+      res.status(400).json({ message: error.message });
     }
   }
 );
 
-router.get("/edit", userIsAuthorized, (req, res) => {
-  res.status(200).json(req.user);
+router.put("/:userId", async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.params.userId,
+      {
+        name,
+
+        email,
+      },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json({ message: "Data updated successfully", user });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+router.put("/change-password/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+
+    const passwordMatched = await bcrypt.compare(oldPassword, user.password);
+    if (!passwordMatched) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.json({ message: "Password changed successfully", user });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router;
