@@ -8,6 +8,7 @@ const userRouter = require("./routes/users");
 const doctorRouter = require("./routes/doctors");
 const appointmentsRouter = require("./routes/appointments");
 const availabilitiesRouter = require("./routes/availabilities");
+const testimonialRouter = require("./routes/testimonials")
 const app = express();
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -24,6 +25,7 @@ app.use("/api/users", userRouter);
 app.use("/api/doctors", doctorRouter);
 app.use("/api/appointments", appointmentsRouter);
 app.use("/api/availabilities", availabilitiesRouter);
+app.use("/api/testimonial", testimonialRouter)
 
 mongoose.set("strictQuery", false);
 // mongoose.set("strictPopulate", false)
